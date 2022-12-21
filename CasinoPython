@@ -1,0 +1,100 @@
+from tkinter import *
+import random
+def Roll():
+
+    global balance
+    if balance < 10:
+        return
+    balance -=10
+
+    i = 0
+
+    for row in range(3):
+        for column in range(5):
+            randomImg = random.choice(fruitPhotos)
+            board[row][column] = Label(frame, image=randomImg)
+            board[row][column].grid(row=row, column=column)
+            pictures[i] = randomImg
+            i+=1
+
+    Win()
+    balanceLabel.config(text='Your money are: ' + str(balance))
+    print(balance)
+
+
+
+def Win():
+
+    priceWin = 0
+    global balance
+    for x in range(len(winContions)):
+        winStreak = 0
+
+        if pictures[int(winContions[x][0])] == pictures[int(winContions[x][1])] and  pictures[int(winContions[x][2])] == pictures[int(winContions[x][1])]:
+            winStreak = 1
+            if pictures[int(winContions[x][2])] == pictures[int(winContions[x][3])]:
+                winStreak= 2
+                if pictures[int(winContions[x][3])] == pictures[int(winContions[x][4])]:
+                    winStreak = 3
+        if pictures[winContions[x][0]] == grapePhoto:
+            priceWin += winStreak*10*5
+
+        elif pictures[winContions[x][0]] == applePhoto:
+            priceWin += winStreak*10*3
+
+        elif pictures[winContions[x][0]] == bananaPhoto:
+            priceWin += winStreak*10*2
+
+        elif pictures[winContions[x][0]] == strawberryPhoto:
+            priceWin += winStreak*10*10
+
+        elif pictures[winContions[x][0]] == cherryPhoto:
+            priceWin += winStreak*10*1
+
+    balance += priceWin
+
+window = Tk()
+window.geometry("920x720")
+window.title('Spice 5 fruits')
+grapePhoto = PhotoImage(file='img.png')
+applePhoto = PhotoImage(file='img_1.png')
+bananaPhoto = PhotoImage(file='img_2.png')
+strawberryPhoto = PhotoImage(file='img_3.png')
+cherryPhoto = PhotoImage(file='img_4.png')
+fruitPhotos = [grapePhoto, applePhoto, bananaPhoto, strawberryPhoto, cherryPhoto]
+
+window.config(background='pink')
+balance = 200
+board = [[0,0,0,0,0],
+           [0,0,0,0,0],
+           [0,0,0,0,0]]
+
+pictures = [0,0,0,0,0,
+            0,0,0,0,0,
+            0,0,0,0,0]
+winContions = [[0,1,2,3,4],
+               [5,6,7,8,9],
+               [10,11,12,13,14],
+               [0,6,12,8,4],
+               [10,6,2,8,14]]
+Label(window, text="Spice 5 fruits", font = ("Comic Sans", 60), fg='yellow', bg='pink').pack()
+
+
+frame = Frame(window)
+frame.pack()
+
+for row in range(3):
+    for column in range(5):
+        randomImg = random.choice(fruitPhotos)
+        board[row][column] = Label(frame, image = randomImg)
+        board[row][column].grid(row=row,column=column)
+balanceLabel = Label(window, text='Your money are: ' + str(balance), font = ("Ariel", 20), fg='purple', bg='pink')
+balanceLabel.pack()
+
+rollButton = Button(window, command = Roll, text = 'Roll', font = ("Comic Sans", 60), activeforeground = 'pink',
+                activebackground = 'purple',fg = 'green',
+                bg = 'yellow', height = 1, width = 14, borderwidth= 10)
+
+rollButton.pack()
+
+window.mainloop()
